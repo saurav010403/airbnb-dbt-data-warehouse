@@ -1,0 +1,21 @@
+# Rename this file to profiles.yml (or merge it into ~/.dbt/profiles.yml) to
+# run the exact same models against BigQuery instead of local DuckDB.
+#
+# Prereqs:
+#   pip install dbt-bigquery
+#   gcloud auth application-default login
+#   Create a BigQuery dataset in your GCP project, e.g. `airbnb_dwh`
+
+airbnb_dwh:
+  target: dev
+  outputs:
+    dev:
+      type: bigquery
+      method: oauth
+      project: YOUR_GCP_PROJECT_ID
+      dataset: airbnb_dwh
+      threads: 4
+      location: US
+      # Seeds and models are schema-agnostic between duckdb and bigquery --
+      # `dbt seed && dbt run && dbt test` works unchanged once this profile
+      # is active.

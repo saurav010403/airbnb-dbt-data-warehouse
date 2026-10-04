@@ -1,0 +1,50 @@
+name: 'airbnb_dwh'
+version: '1.0.0'
+config-version: 2
+
+profile: 'airbnb_dwh'
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+seeds:
+  airbnb_dwh:
+    +schema: raw
+    raw_listings:
+      +column_types:
+        listing_id: integer
+        host_id: integer
+        price: integer
+        minimum_nights: integer
+        number_of_reviews: integer
+        reviews_per_month: float
+        calculated_host_listings_count: integer
+        availability_365: integer
+    raw_reviews:
+      +column_types:
+        review_id: integer
+        listing_id: integer
+        reviewer_id: integer
+    raw_calendar:
+      +column_types:
+        listing_id: integer
+        price: integer
+
+models:
+  airbnb_dwh:
+    staging:
+      +materialized: view
+      +schema: staging
+    intermediate:
+      +materialized: view
+      +schema: intermediate
+    marts:
+      +materialized: table
+      +schema: marts
